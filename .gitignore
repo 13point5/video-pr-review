@@ -1,1 +1,6 @@
 videos/
+node_modules/
+.env
+*.env
+
+modal-sandbox-smoke/artifacts/
