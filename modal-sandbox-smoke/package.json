@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "cdp-smoke": "bun run src/sandbox-cdp-smoke.ts"
+    "cdp-smoke": "bun run src/sandbox-cdp-smoke.ts",
+    "rlx-cdp": "bun run src/sandbox-rlx-cdp.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.4",

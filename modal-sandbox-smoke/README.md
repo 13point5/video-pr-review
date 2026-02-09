@@ -21,6 +21,47 @@ The script loads `.env` automatically via `dotenv`.
 If successful, the video is written to `modal-sandbox-smoke/artifacts/`.
 By default, this script builds (or reuses) a cached Modal image layer with `chromium`, `ffmpeg`, and `agent-browser` preinstalled so future runs start faster.
 
+## RLX codeflix + CDP run
+
+This run clones `13point5/rlx` inside the sandbox, writes API/web sandbox env files from your local RLX checkout, executes setup/run commands from `codeflix.json`, and records a short video via CDP.
+
+```bash
+cd modal-sandbox-smoke
+bun run rlx-cdp
+```
+
+Defaults expect your local RLX checkout at `../rlx` (sibling to this repo) and load env files in this order:
+
+1. `apps/api/.env.sandbox`
+2. `apps/web/.env.sandbox`
+
+In RLX, create sandbox env files once:
+
+```bash
+cp apps/api/.env apps/api/.env.sandbox
+cp apps/web/.env.local apps/web/.env.sandbox
+```
+
+Create `codeflix.json` in the RLX repo root. Keep it simple: `setup` and `run` are strings.
+
+```json
+{
+  "setup": "bash scripts/codeflix-setup.sh",
+  "run": "bash scripts/codeflix-run.sh",
+  "open_url": "http://127.0.0.1:3000/sign-in"
+}
+```
+
+Override only if needed:
+
+```bash
+export RLX_LOCAL_DIR="/absolute/path/to/rlx"
+export RLX_API_ENV_PATH="/absolute/path/to/rlx/apps/api/.env.sandbox"
+export RLX_WEB_ENV_PATH="/absolute/path/to/rlx/apps/web/.env.sandbox"
+export CODEFLIX_CONFIG_PATH="/absolute/path/to/rlx/codeflix.json"
+export RLX_REPO_URL="https://github.com/13point5/rlx.git"
+```
+
 ## Required auth
 
 Use one of:
