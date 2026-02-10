@@ -36,6 +36,30 @@ This does the following:
 - opens tunnel ports and prints preview URLs,
 - leaves the sandbox running.
 
+## Browserbase smoke screenshot
+
+After sandbox is running, capture a screenshot of `/settings` using Browserbase + Playwright:
+
+```bash
+cd code-flix
+uv run python browserbase_settings_screenshot.py
+```
+
+This script:
+
+- resolves the current sandbox web preview URL,
+- signs in via Clerk email-code test flow,
+- navigates to `/settings`,
+- saves a screenshot in `code-flix/artifacts/`.
+
+Optional flags:
+
+```bash
+uv run python browserbase_settings_screenshot.py --sandbox-id sb-xxxxxxxxxxxxxxxxxxxxxx
+uv run python browserbase_settings_screenshot.py --web-url https://...modal.host
+uv run python browserbase_settings_screenshot.py --output artifacts/settings.png
+```
+
 To stop the last started sandbox:
 
 ```bash
@@ -61,4 +85,8 @@ export RLX_WEB_ENV_PATH="/absolute/path/to/rlx/apps/web/.env.sandbox"
 export MODAL_APP_NAME="rlx-video-smoke"
 export MODAL_BASE_IMAGE="node:22-slim"
 export CODEFLIX_TUNNEL_PORTS="3000,8000"
+export BROWSERBASE_API_KEY="bb_live_..."
+export BROWSERBASE_PROJECT_ID="proj_..."
+export CLERK_TEST_EMAIL="bla+clerk_test@example.com"
+export CLERK_TEST_CODE="424242"
 ```

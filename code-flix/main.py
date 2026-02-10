@@ -155,6 +155,12 @@ def apply_preview_security_overrides(
     )
 
     web_env_text = _upsert_env_value(web_env_text, "API_BASE_URL", api_origin)
+    web_env_text = _upsert_env_value(web_env_text, "CLERK_PROXY_URL", web_origin)
+    web_env_text = _upsert_env_value(
+        web_env_text,
+        "NEXT_PUBLIC_CLERK_PROXY_URL",
+        web_origin,
+    )
 
     return api_env_text, web_env_text
 
@@ -171,7 +177,7 @@ def stop_sandbox(sandbox_id: str) -> None:
         SANDBOX_ID_FILE.unlink(missing_ok=True)
 
 
-def resolve_env_paths() -> tuple[Path, Path]:
+def resolve_env_paths() -> tuple[Path, Path, Path]:
     project_root = Path(__file__).resolve().parent
     default_rlx_dir = (project_root / ".." / ".." / "rlx").resolve()
 
@@ -185,7 +191,12 @@ def resolve_env_paths() -> tuple[Path, Path]:
             "RLX_WEB_ENV_PATH", str(default_rlx_dir / "apps" / "web" / ".env.sandbox")
         )
     )
-    return api_env, web_env
+    web_proxy = Path(
+        os.getenv(
+            "RLX_WEB_PROXY_PATH", str(default_rlx_dir / "apps" / "web" / "proxy.ts")
+        )
+    )
+    return api_env, web_env, web_proxy
 
 
 def wrap_with_env(command: str) -> str:
@@ -203,12 +214,14 @@ def wrap_with_env(command: str) -> str:
 
 
 def create_and_start() -> None:
-    api_env_path, web_env_path = resolve_env_paths()
+    api_env_path, web_env_path, web_proxy_path = resolve_env_paths()
     api_env_text = api_env_path.read_text(encoding="utf-8")
     web_env_text = web_env_path.read_text(encoding="utf-8")
+    web_proxy_text = web_proxy_path.read_text(encoding="utf-8")
 
     print(f"Using API sandbox env: {api_env_path}")
     print(f"Using web sandbox env: {web_env_path}")
+    print(f"Using web proxy file: {web_proxy_path}")
 
     app = modal.App.lookup(APP_NAME, create_if_missing=True)
 
@@ -271,6 +284,7 @@ def create_and_start() -> None:
         write_remote_text(
             sandbox, f"{RLX_REPO_DIR}/apps/web/.env.sandbox", web_env_text
         )
+        write_remote_text(sandbox, f"{RLX_REPO_DIR}/apps/web/proxy.ts", web_proxy_text)
 
         run_phase(
             sandbox,

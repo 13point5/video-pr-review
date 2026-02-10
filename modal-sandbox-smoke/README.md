@@ -62,6 +62,19 @@ export CODEFLIX_CONFIG_PATH="/absolute/path/to/rlx/codeflix.json"
 export RLX_REPO_URL="https://github.com/13point5/rlx.git"
 ```
 
+## RLX sign-in + home screenshot (in sandbox)
+
+This run keeps everything inside the Modal sandbox, signs in with Clerk test email-code auth using `agent-browser`, opens `http://127.0.0.1:3000/home`, and captures a PNG screenshot.
+
+```bash
+cd modal-sandbox-smoke
+export CLERK_TEST_EMAIL="your-test-user@example.com"
+export CLERK_TEST_CODE="424242"
+bun run rlx-home-screenshot
+```
+
+If successful, the screenshot is written to `modal-sandbox-smoke/artifacts/`.
+
 ## Required auth
 
 Use one of:

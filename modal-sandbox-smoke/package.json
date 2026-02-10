@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "cdp-smoke": "bun run src/sandbox-cdp-smoke.ts",
-    "rlx-cdp": "bun run src/sandbox-rlx-cdp.ts"
+    "rlx-cdp": "bun run src/sandbox-rlx-cdp.ts",
+    "rlx-home-screenshot": "bun run src/sandbox-rlx-home-screenshot.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.4",
